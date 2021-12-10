@@ -53,6 +53,19 @@ int insere_requisicoes_fila(Fila *fila, char prioridade[1], char ip[11])
   return 1;
 }
 
+int remove_elem_fila(Fila *fila)
+{
+   if (fila == NULL)
+        return 0;
+    if ((*fila) == NULL)
+        return 0;
+    RequisicaoImpressao *no = *fila;
+    *fila = no->prox;
+    free(no);
+    printf("ELEMENTO REMOVIDO!\n\n");
+    return 1;
+}
+
 void imprime_fila(Fila *fila)
 {
 
@@ -71,6 +84,9 @@ int main()
   int result;
   char AuxStr[17];
   struct Fila *fila = cria_fila();
+  struct Fila *fila0 = cria_fila();
+  struct Fila *fila1 = cria_fila();
+  struct Fila *fila2 = cria_fila();
 
   int i = 1;
   arq = fopen("fila.txt", "rt");
@@ -96,6 +112,13 @@ int main()
         i++;
       }
     }
+    sleep(5);
+imprime_fila(fila);
+  for ( i = 0; i < 5; i++)
+  {
+    remove_elem_fila(fila);
+  }
+  
 
     imprime_fila(fila);
 
