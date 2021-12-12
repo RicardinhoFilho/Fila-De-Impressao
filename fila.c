@@ -23,6 +23,27 @@ Fila *cria_fila()
   }
 }
 
+int troca_fila(Fila *fila, Fila *fila0, Fila *fila1, Fila *fila2)
+{
+  RequisicaoImpressao *req = *fila;
+
+  //printf("Vendo: Prioridade->%c, Ip->%s\n", req->prioridade, req->ip);
+  // insere_requisicoes_fila(fila2, '3', "192.168.0.1")
+  if (req->prioridade == '3')
+  {
+    insere_requisicoes_fila(fila0, req->prioridade, req->ip);
+  }
+    else if (req->prioridade == '2')
+    {
+      insere_requisicoes_fila(fila1, req->prioridade, req->ip);
+    }
+    else if (req->prioridade == '3')
+   {
+      insere_requisicoes_fila(fila2, req->prioridade, req->ip);
+    }
+  free(req);
+  return 1;
+}
 int insere_requisicoes_fila(Fila *fila, char prioridade[1], char ip[11])
 {
 
@@ -33,7 +54,6 @@ int insere_requisicoes_fila(Fila *fila, char prioridade[1], char ip[11])
   no->prioridade = prioridade;
   strcpy(no->ip, ip);
   no->prioridade = prioridade;
-
   if ((*fila) == NULL)
   {
     *fila = no;
@@ -55,15 +75,15 @@ int insere_requisicoes_fila(Fila *fila, char prioridade[1], char ip[11])
 
 int remove_elem_fila(Fila *fila)
 {
-   if (fila == NULL)
-        return 0;
-    if ((*fila) == NULL)
-        return 0;
-    RequisicaoImpressao *no = *fila;
-    *fila = no->prox;
-    free(no);
-    printf("ELEMENTO REMOVIDO!\n\n");
-    return 1;
+  if (fila == NULL)
+    return 0;
+  if ((*fila) == NULL)
+    return 0;
+  RequisicaoImpressao *no = *fila;
+  *fila = no->prox;
+  free(no);
+  printf("ELEMENTO REMOVIDO!\n\n");
+  return 1;
 }
 
 void imprime_fila(Fila *fila)
@@ -93,35 +113,28 @@ int main()
 
   if (arq == NULL)
   {
-    printf("Problemas na CRIACAO do arquivo\n");
+    printf("Problemas na leitura do arquivo\n");
     return;
   }
   else
   {
-    printf("Fila de Entrada:\n");
+    //printf("Fila de Entrada:\n");
     while (i <= 50)
-    {
 
       result = fgets(AuxStr, 17, arq);
-      if (result)
-      {
-        char *str = malloc(strlen(AuxStr));
+    if (result)
+    {
+      //char *str = malloc(strlen(AuxStr));
+      //insere_requisicoes_fila(fila, AuxStr[1], strncpy(str, AuxStr + 4, 11));
 
-        insere_requisicoes_fila(fila, AuxStr[1], strncpy(str, AuxStr + 4, 11));
-
-        i++;
-      }
+      i++;
+    }else{
+      printf("q merda");
     }
-    sleep(5);
-imprime_fila(fila);
-  for ( i = 0; i < 5; i++)
-  {
-    remove_elem_fila(fila);
   }
-  
+  //   // fclose(arq);
 
-    imprime_fila(fila);
-
-    fclose(arq);
-  }
+     printf("Olhaaaaaaaaa\n\n\n\n");
+     imprime_fila(fila);
+  //   fclose(arq);
 }
