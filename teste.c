@@ -12,7 +12,7 @@ typedef struct requisicao
 
 typedef struct fila_requisicao
 {
-    struct Fila *corpo;
+
     struct requisicao *final;
     struct requisicao *inicio;
 } Fila_Requisicao;
@@ -20,80 +20,96 @@ typedef struct fila_requisicao
 typedef struct requisicao *Fila;
 typedef struct requisicao RequisicaoImpressao;
 
-typedef struct fila_requisicao *Fila_Requisicoes;
+typedef struct fila_requisicao *Estrutura;
 
-Fila *cria_fila_nodo()
+// Fila *cria_fila_nodo()
+// {
+//     Fila *fila = (Fila *)malloc(sizeof(Fila)); //reservar memoria para o primeiro no da lista
+//     if (fila != NULL)
+//     {
+//         *fila = NULL; //Dando ao ultimo elemento da lista o valor de null
+//         printf("Fila criada com sucesso!.\n\n");
+//         return fila;
+//     }
+// }
+
+Estrutura *cria_fila()
 {
-    Fila *fila = (Fila *)malloc(sizeof(Fila)); //reservar memoria para o primeiro no da lista
+    Estrutura fila = (Estrutura *)malloc(sizeof(Estrutura)); //reservar memoria para o primeiro no da lista
     if (fila != NULL)
     {
-        *fila = NULL; //Dando ao ultimo elemento da lista o valor de null
-        printf("Fila criada com sucesso!.\n\n");
+        fila->final = NULL;
+        fila->inicio = NULL;
         return fila;
     }
 }
 
-
-Fila_Requisicoes *cria_fila()
-{
-    Fila_Requisicoes *fila = (Fila_Requisicoes *)malloc(sizeof(Fila_Requisicoes)); //reservar memoria para o primeiro no da lista
-    if (fila != NULL)
-    {
-        *fila = NULL; //Dando ao ultimo elemento da lista o valor de null
-        printf("Lista criada de matrizes criada com sucesso!.\n\n");
-        return fila;
-    }
-}
-
-
-int insere_requisicoes_fila(Fila *fila, char prioridade[1], char ip[11])
+int insere_requisicoes_fila(Fila_Requisicao *fila, char prioridade[1], char ip[11])
 {
 
     if (fila == NULL)
         return 0;
 
     RequisicaoImpressao *no = (RequisicaoImpressao *)malloc(sizeof(RequisicaoImpressao));
+
     no->prioridade = prioridade;
     strcpy(no->ip, ip);
     no->prioridade = prioridade;
 
-    if ((*fila) == NULL)
+    if (fila->inicio == NULL)
     {
-        *fila = no;
+        
+        fila->inicio = no;
+        fila->final = no;
+        no->prox = NULL;
+           printf("Inserindo: Prioridade->%c, Ip->%s\n", fila->inicio->prioridade, fila->inicio->ip);
+
     }
     else
     {
-        RequisicaoImpressao *aux = *fila; //SEMPRE percorrer a lista com um aux, nunca com o inicio da lista
-        while (aux->prox != NULL)
-        {
-            aux = aux->prox;
-        }
-        aux->prox = no; //insere no final o novo no
+       fila->final->prox = no; 
+    fila->final = no;
+    
+           printf("Inserindo: Prioridade->%c, Ip->%s\n", fila->inicio->prioridade, fila->inicio->ip);
+    
     }
-
-    printf("Inserindo: Prioridade->%c, Ip->%s\n", no->prioridade, no->ip);
 
     return 1;
 }
 
-int remove_elem_fila(Fila *fila)
+int remove_elem_fila(Estrutura fila)
 {
     if (fila == NULL)
         return 0;
-    if ((*fila) == NULL)
+
+    if(fila->inicio == NULL){
         return 0;
-    RequisicaoImpressao *no = *fila;
-    *fila = no->prox;
+    }  
+
+    RequisicaoImpressao *no = fila->inicio;
+
+    fila->inicio = fila->inicio->prox;
+
+    if(fila->inicio == NULL){
+        fila->final= NULL;
+    }
+
+
     free(no);
     printf("ELEMENTO REMOVIDO!\n\n");
     return 1;
 }
 
-void imprime_fila(Fila *fila)
+void imprime_fila(Estrutura fila)
 {
     int cont = 0;
-    RequisicaoImpressao *req = *fila;
-    while (req != NULL)
+    RequisicaoImpressao *req =  fila->inicio;
+
+    if(fila->inicio == NULL){
+        printf("Esta fila está vazia!\n\n");
+    }
+
+    while (req != fila->final)
     {
         cont++;
         printf("%d-\n Prioridade:%c\n Ip:%s\n", cont, req->prioridade, req->ip);
@@ -102,10 +118,10 @@ void imprime_fila(Fila *fila)
     }
 }
 
-void rodada(Fila *fila, Fila *fila0, Fila *fila1, Fila *fila2)
-{
-    RequisicaoImpressao *req = *fila;
-    //printf("%s", req->ip);
+void rodada(Estrutura fila, Estrutura *fila0, Estrutura *fila1, Estrutura *fila2)
+{printf("AQUI DEU \n\n\n\n\n\n");
+    RequisicaoImpressao *req =  fila->inicio;
+    printf("AQUI DEU \n\n\n\n\n\n");
     if (req->prioridade == '3')
     {
         insere_requisicoes_fila(fila0, req->prioridade, req->ip);
@@ -119,12 +135,12 @@ void rodada(Fila *fila, Fila *fila0, Fila *fila1, Fila *fila2)
         insere_requisicoes_fila(fila2, req->prioridade, req->ip);
     }
 
-    remove_elem_fila(fila); //Comentei a linha de remover
+    //remove_elem_fila(fila); //Comentei a linha de remover
 }
 
-void tenta(Fila *fila, Fila *fila0, Fila *fila1, Fila *fila2)
+void tenta(Estrutura fila, Fila *fila0, Fila *fila1, Fila *fila2)
 {
-    RequisicaoImpressao *req = *fila;
+    RequisicaoImpressao *req = fila->inicio;
     while (req != NULL)
     {
         printf("TESTE");
@@ -152,10 +168,10 @@ int main()
     FILE *arq;
     int result;
     char AuxStr[17];
-    struct Fila *fila = cria_fila_nodo();
-    struct Fila *fila0 = cria_fila_nodo();
-    struct Fila *fila1 = cria_fila_nodo();
-    struct Fila *fila2 = cria_fila_nodo();
+    struct Estrutura *fila = cria_fila();
+    struct Estrutura *fila0 = cria_fila();
+    struct Estrutura *fila1 = cria_fila();
+    struct Estrutura *fila2 = cria_fila();
 
     int i = 1;
     arq = fopen("fila.txt", "rt");
